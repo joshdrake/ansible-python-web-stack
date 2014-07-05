@@ -1,0 +1,17 @@
+server {
+  server_name           {{ kibana_hostname }};
+  access_log            /var/log/nginx/kibana.log;
+  error_log             /var/log/nginx/kibana-erros.log;
+
+  location / {
+    root  {{ kibana_home_dir }}/kibana-{{ kibana_version }};
+    index  index.html  index.htm;
+  }
+
+  {% for location in ["~ ^/_aliases$", "~ /.*/_aliases$", "~ ^/_nodes$", "~ ^/.*/_search$", "~ ^/.*/_mapping", "^/kibana-int/dashboard/.*$", "~ ^/kibana-int/temp.*$"] -%}
+    location {{ location }} {
+      proxy_pass {{ kibana_elasticsearch_url }};
+      proxy_read_timeout 90;
+    }
+  {% endfor %}
+}

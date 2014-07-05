@@ -1,0 +1,6 @@
+kibana_download_url: https://download.elasticsearch.org/kibana/kibana
+kibana_version: 3.1.0
+
+kibana_home_dir: /srv/kibana
+kibana_elasticsearch_url: http://localhost:9200
+kibana_hostname: kibana.example.com

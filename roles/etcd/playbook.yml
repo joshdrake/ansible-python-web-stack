@@ -1,0 +1,45 @@
+---
+- name: Install and configure etcd
+  hosts: managementservers
+  remote_user: "{{ user }}"
+  sudo: yes
+  # vars_files:
+  #   - vars/default.yml
+  pre_tasks:
+    - apt: update_cache=yes cache_valid_time=86400
+
+  tasks:
+    # - include: tasks/go.yml
+    # - include: tasks/etcd.yml
+
+    # - with_items: "windward/clients/npg/settings"
+    #   register: npg_settings
+
+    - debug: msg="the value of WC is {{ windward_clientz }}"
+
+     # - debug: msg="the value of NPG TIME_ZONE is {{ item }}"
+     #   with_etcd: "windward/clients/npg/settings/TIME_ZONE"
+
+     # - debug: msg="the value of is {{ item }}"
+     #   with_etcd:
+     #     TIME_ZONE: "windward/clients/npg/settings/TIME_ZONE"
+     #     SECRET_KEY: "windward/clients/npg/settings/SECRET_KEY"
+
+     # - debug: msg="the value of is {{ item }}"
+     #   with_etcd:
+     #     - "windward/clients/npg/settings/TIME_ZONE"
+     #     - "windward/clients/npg/settings/SECRET_KEY"
+
+     # - debug: msg="the value of is {{ item }}"
+     #   with_etcd: "windward/clients"
+
+
+
+
+     # - debug: msg="the value of clients is {{ contents }}"
+     # # - uri: url="http://127.0.0.1:4001/v2/keys/windward/clients/npg?recursive=true"
+     # #        method=GET
+     # #        HEADER_Content-Type="application/json"
+     # #        return_content=yes
+     # #   register: npg
+     # # - debug: msg="npg = {{ npg.json }}"

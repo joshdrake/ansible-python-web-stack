@@ -1,0 +1,50 @@
+- name: Ensure logstash service config is in place
+  template:
+    src=logstash.default.j2
+    dest=/etc/default/logstash
+  notify:
+    - Restart logstash
+
+- name: Ensure logstash config is in place
+  template:
+    src=logstash.conf.j2
+    dest={{ logstash_config_directory }}/logstash.conf
+  notify:
+    - Restart logstash
+
+- name: Install the logstash-forwarder certificate if lumberjack is enabled
+  copy:
+    src="{{ logstash_forwarder_cert }}"
+    dest="{{ logstash_forwarder_cert_file }}"
+    owner="{{ logstash_user }}"
+    group=root
+    mode=0755
+  when: logstash_lumberjack_enabled
+  notify:
+    - Restart logstash
+
+- name: Install the logstash-forwarder private key if lumberjack is enabled
+  # we're templating this out here so that the private key can be encrypted by vault
+  template:
+    src="{{ logstash_forwarder_key | mandatory }}"
+    dest="{{ logstash_forwarder_key_file }}"
+    owner="{{ logstash_user }}"
+    group=root
+    mode=0600
+  when: logstash_lumberjack_enabled
+  notify:
+    - Restart logstash
+
+- name: Copy over custom logstash patterns
+  copy:
+    src="{{ logstash_custom_patterns }}"
+    dest="{{ logstash_custom_patterns_dir }}"
+    owner="{{ logstash_user }}"
+    group="{{ logstash_user }}"
+  when: logstash_custom_patterns is defined and logstash_custom_patterns_dir is defined
+
+- name: Enable logstash-forwarder service
+  service:
+    name=logstash
+    enabled=yes
+    state=started

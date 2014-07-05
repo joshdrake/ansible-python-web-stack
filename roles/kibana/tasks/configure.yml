@@ -1,0 +1,4 @@
+- name: Ensure configuration file is present
+  template:
+    src=config.js.j2
+    dest="{{ kibana_home_dir }}/kibana-{{ kibana_version }}/config.js"

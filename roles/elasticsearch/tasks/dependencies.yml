@@ -1,0 +1,18 @@
+- name: Install the Oracle JDK PPA
+  apt_repository:
+    repo='ppa:webupd8team/java'
+    state=present
+    update_cache=yes
+
+- name: Accept Oracle license prior to JDK installation
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
+- name: Install the Oracle JDK
+  apt:
+    name=oracle-java7-installer
+    state=installed
+
+- name: Set Oracle JVM to the default
+  apt:
+    name=oracle-java7-set-default
+    state=installed

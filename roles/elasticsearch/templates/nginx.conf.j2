@@ -1,0 +1,17 @@
+server {
+  server_name   {{ elasticsearch_hostname }};
+
+  error_log     /var/log/nginx/elasticsearch-errors.log;
+  access_log    /var/log/nginx/elasticsearch.log;
+
+  location / {
+    if ($request_filename ~ "_cluster") {
+      return 403;
+      break;
+    }
+
+    proxy_pass          {{ elasticsearch_url }};
+    proxy_redirect      off;
+    include             {{ nginx_conf_directory }}/proxy_params;
+  }
+}

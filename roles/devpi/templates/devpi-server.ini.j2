@@ -1,0 +1,9 @@
+[program:devpi-server]
+command={{ devpi_venv_dir }}/bin/devpi-server --host {{ devpi_host }} --port {{ devpi_port }} --serverdir {{ devpi_data_dir }}
+user={{ devpi_user }}
+priority=999
+stdout_logfile={{ devpi_log_dir }}/%(program_name)s-stdout.log
+stderr_logfile={{ devpi_log_dir }}/%(program_name)s-stderr.log
+autostart=True
+killasgroup=true
+stopasgroup=true

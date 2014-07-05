@@ -1,0 +1,9 @@
+devpi_host: 0.0.0.0
+devpi_port: 4040
+devpi_user: devpi
+devpi_group: devpi
+
+devpi_app_dir: "/srv/devpi"
+devpi_venv_dir: "/srv/devpi/virtualenv"
+devpi_data_dir: "/srv/devpi/data"
+devpi_log_dir: "/var/log/devpi"

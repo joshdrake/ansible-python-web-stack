@@ -1,0 +1,12 @@
+supervisor_version: "latest"
+
+supervisor_home: '/etc/supervisor'
+supervisor_config: '{{ supervisor_home }}/supervisord.conf'
+supervisor_config_dir: '{{ supervisor_home }}/conf.d'
+
+supervisord_path: '/usr/bin/supervisord'
+supervisorctl_path: '/usr/bin/supervisorctl'
+
+supervisor_http: off
+supervisor_http_host: 0.0.0.0
+supervisor_http_port: 9001

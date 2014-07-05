@@ -1,0 +1,24 @@
+- name: Download Elasticsearch deb
+  get_url:
+    url="{{ elasticsearch_download_url }}/elasticsearch-{{ elasticsearch_version }}.deb"
+    dest="/tmp/elasticsearch-{{ elasticsearch_version }}.deb"
+    mode=0440
+
+- name: Install Elasticsearch package
+  apt:
+    deb="/tmp/elasticsearch-{{ elasticsearch_version }}.deb"
+    state=installed
+
+- name: Ensure appropriate directories exist
+  file:
+    path="{{ item }}"
+    state=directory
+    owner="{{ elasticsearch_user }}"
+    group="{{ elasticsearch_group }}"
+  with_items:
+    - "{{ elasticsearch_plugin_dir }}"
+    - "{{ elasticsearch_log_dir }}"
+    - "{{ elasticsearch_home_dir }}"
+    - "{{ elasticsearch_data_dir }}"
+    - "{{ elasticsearch_conf_dir }}"
+    - "{{ elasticsearch_work_dir }}"

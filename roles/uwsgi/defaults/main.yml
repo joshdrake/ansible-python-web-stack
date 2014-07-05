@@ -1,0 +1,7 @@
+uwsgi_site_template: site.ini
+uwsgi_env_dirname: virtualenv
+uwsgi_wsgi_module: site.wsgi
+uwsgi_config_filename: uwsgi.ini
+uwsgi_socket: null
+uwsgi_home: "{{ chdir }}/{{ item }}/{{ env_dirname }}"
+uwsgi_chdir: /etc/uwsgi-emperor/vassals

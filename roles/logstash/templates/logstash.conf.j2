@@ -1,0 +1,48 @@
+# logstash configuration
+
+# Define inputs
+input {
+  {% if logstash_lumberjack_enabled -%}
+    lumberjack {
+      port => {{ logstash_lumberjack_port }}
+      ssl_certificate => "{{ logstash_forwarder_cert_file }}"
+      ssl_key => "{{ logstash_forwarder_key_file }}"
+      type => "Lumberjack"
+    }
+  {%- endif %}
+
+  {% for input in logstash_inputs -%}
+    {{ input.name }} {
+      {% for key, value in input.config.items() -%}
+         {{ key }} => {{ value }}
+      {% endfor %}
+    }
+  {%- endfor %}
+}
+
+filter {
+  {% for filter in logstash_filters -%}
+    if [type] == "{{ filter.type }}" {
+      {{ filter.filter }} {
+        {% for key, value in filter.config.items() -%}
+          {{ key }} => {{ value }}
+        {% endfor %}
+      }
+    }
+  {%- endfor %}
+
+}
+
+output {
+  {% if logstash_elasticsearch_enabled -%}
+    elasticsearch { host => "{{ logstash_elasticsearch_host }}" }
+  {%- endif %}
+
+  {% for output in logstash_outputs -%}
+    {{ output.name }} {
+      {% for key, value in output.config.items() -%}
+         {{ key }} => {{ value }}
+      {%- endfor %}
+    }
+  {%- endfor %}
+}

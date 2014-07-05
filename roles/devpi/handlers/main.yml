@@ -1,0 +1,7 @@
+---
+- name: Restart devpi server
+  supervisorctl:
+    name=devpi-server
+    state=restarted
+    supervisorctl_path="{{ supervisorctl_path }}"
+    config="{{ supervisor_config }}"

@@ -1,0 +1,21 @@
+- name: Create the vassal directories
+  file:
+    path="{{ uwsgi_chdir }}/{{ item.slug }}"
+    state=directory
+    owner=www-data
+    group=www-data
+  with_items: uwsgi_sites
+  tags:
+    - files
+    - files:site
+
+- name: Ensure site-configuration files are available for all clients
+  template:
+    src={{ uwsgi_site_template }}
+    dest={{ uwsgi_chdir }}/{{ item.slug }}/uwsgi.ini
+    owner=www-data
+    group=www-data
+  with_items: uwsgi_sites
+  tags:
+    - config
+    - config:site

@@ -1,0 +1,30 @@
+- name: Download etcd release from GitHub
+  sudo: no
+  local_action: get_url url=https://github.com/coreos/etcd/releases/download/v{{ version }}/etcd-v{{ version }}-linux-amd64.tar.gz
+                dest=/tmp/etcd-v{{ version }}.tar.gz
+
+- name: Extract etcd binary
+  unarchive: src=/tmp/etcd-v{{ version }}.tar.gz
+             dest=/usr/local/src/
+             creates=/usr/local/src/etcd-v{{ version }}-linux-amd64/etcd
+
+- name: Move etcd to /usr/bin
+  command: cp /usr/local/src/etcd-v{{ version }}-linux-amd64/{{ item }} /usr/bin/{{ item }} creates=/usr/bin/{{ item }}
+  with_items:
+    - etcd
+    - etcdctl
+
+- name: Create data directory
+  file: path={{ data_dir }} state=directory
+
+- name: Create conf directory
+  file: path=/etc/etcd/ state=directory
+
+- name: Copy init script for etcd server
+  template: src=upstart.j2 dest=/etc/init/etcd.conf
+
+- name: Copy configuration file for etcd server
+  template: src=etcd.conf dest=/etc/etcd/etcd.conf
+
+- name: Start etcd
+  service: name=etcd state=started

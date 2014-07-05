@@ -1,0 +1,20 @@
+logstash_inputs: []
+logstash_outputs: []
+
+logstash_lumberjack_enabled: yes
+logstash_lumberjack_port: 5043
+
+logstash_elasticsearch_enabled: yes
+logstash_elasticsearch_host: "127.0.0.1"
+
+logstash_forwarder_key_file: "/etc/ssl/private/logstash-forwarder.key"
+logstash_forwarder_cert_file: "/etc/ssl/certs/logstash-forwarder.crt"
+
+logstash_pid_file: /var/run/logstash.pid
+logstash_user: logstash
+
+logstash_install_directory: /opt/logstash
+logstash_patterns_directory: "{{ logstash_install_directory }}/patterns"
+logstash_data_directory: /var/lib/logstash
+logstash_log_directory: /var/log/logstash
+logstash_config_directory: /etc/logstash/conf.d

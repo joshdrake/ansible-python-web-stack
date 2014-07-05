@@ -1,0 +1,5 @@
+- name: Create devpi-server supervisor config
+  template:
+    src=devpi-server.ini.j2
+    dest="{{ supervisor_config_dir }}/devpi-server.ini"
+  notify: Restart devpi server

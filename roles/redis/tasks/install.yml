@@ -1,0 +1,4 @@
+- name: Install redis
+  apt:
+    name="redis-server{% if redis_version is defined %}={{ redis_version }}{% endif %}"
+    state="{% if redis_version is defined %}present{% else %}latest{% endif %}"

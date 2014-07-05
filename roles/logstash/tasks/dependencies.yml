@@ -1,0 +1,9 @@
+- name: Ensure python-pycurl is installed
+  apt:
+    pkg=python-pycurl
+    state=installed
+
+- name: Ensure OpenJDK is installed
+  apt:
+    pkg=openjdk-7-jre
+    state=installed

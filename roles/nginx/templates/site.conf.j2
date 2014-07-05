@@ -1,0 +1,13 @@
+server {
+    listen      {{ item.port | default('80') }};
+    server_name {{ item.hostnames | join(" ") }};
+    charset     utf-8;
+
+    {% if 'static_directories' in item -%}
+      {% for path, location in item.static_directories.items() -%}
+        location {{ path }} {
+          alias "{{ location }}";
+        }
+      {% endfor %}
+    {% endif %}
+}

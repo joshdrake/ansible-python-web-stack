@@ -1,0 +1,27 @@
+- name: Create the devpi user account
+  user:
+    name="{{ devpi_user }}"
+    shell=/bin/false
+    createhome=no
+  notify: Restart devpi server
+
+- name: Create devpi directories
+  file:
+    path="{{ item }}"
+    state=directory
+    owner="{{ devpi_user }}"
+    group="{{ devpi_group }}"
+  with_items:
+    - "{{ devpi_app_dir }}"
+    - "{{ devpi_venv_dir }}"
+    - "{{ devpi_log_dir }}"
+    - "{{ devpi_data_dir }}"
+  notify: Restart devpi server
+
+- name: Install devpi-server from PyPI
+  pip:
+    name=devpi-server
+    state=present
+    virtualenv="{{ devpi_venv_dir }}"
+  sudo_user: "{{ devpi_user }}"
+  notify: Restart devpi server

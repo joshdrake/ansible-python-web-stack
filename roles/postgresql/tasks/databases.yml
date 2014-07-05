@@ -1,0 +1,57 @@
+- name: PostgreSQL | Ensure PostgreSQL is running
+  service:
+    name: postgresql
+    state: started
+
+- name: PostgreSQL | Make sure the PostgreSQL databases are present
+  sudo: yes
+  sudo_user: "{{ postgresql_admin_user }}"
+  postgresql_db:
+    name: "{{ item.name }}"
+    encoding: "{{ postgresql_encoding }}"
+    lc_collate: "{{ postgresql_locale }}"
+    lc_ctype: "{{ postgresql_locale }}"
+    template: "{{ item.template|default('template0') }}"
+    state: present
+  with_items: postgresql_databases
+  when: postgresql_databases|length > 0
+  tags:
+    - datastore
+    - datastore:site
+
+- name: PostgreSQL | Change owner of database objects
+  sudo: yes
+  sudo_user: "{{ postgresql_admin_user }}"
+  shell: "psql {{ item.name }} -c 'REASSIGN OWNED BY {{ postgresql_admin_user }} TO {{ item.owner }}'"
+  with_items: postgresql_databases
+  when: postgresql_databases|length > 0
+  tags:
+    - datastore
+    - datastore:site
+
+- name: PostgreSQL | Make sure the PostgreSQL database schemas are present
+  sudo: yes
+  sudo_user: "{{ postgresql_admin_user }}"
+  postgresql_schema:
+    name: "{{ item.name }}"
+    db: "{{ item.db }}"
+    owner: "{{ item.owner | default(postgresql_admin_user) }}"
+  with_items: postgresql_schemas
+  when: postgresql_schemas|length > 0
+  tags:
+    - datastore
+    - datastore:site
+
+- name: PostgreSQL | Add hstore to the databases with the requirement
+  sudo: yes
+  sudo_user: "{{ postgresql_admin_user }}"
+  shell: "psql {{ item.name }} -c 'CREATE EXTENSION IF NOT EXISTS hstore;'"
+  with_items: postgresql_databases
+  when: item.hstore is defined and item.hstore
+
+- name: PostgreSQL | Add uuid-ossp to the database with the requirement
+  sudo: yes
+  sudo_user: "{{ postgresql_admin_user }}"
+  shell: "psql {{ item.name }} -c 'CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";'"
+  with_items: postgresql_databases
+  when: item.uuid_ossp is defined and item.uuid_ossp

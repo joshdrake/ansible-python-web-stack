@@ -1,0 +1,4 @@
+- name: Ensure Nginx is at the desired version
+  apt:
+    pkg: "nginx{% if nginx_version and nginx_version != 'latest' %}={{ nginx_version }}{% endif %}"
+    state: "{% if nginx_version and nginx_version != 'latest' %}present{% else %}latest{% endif %}"

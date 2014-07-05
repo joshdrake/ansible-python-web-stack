@@ -1,0 +1,26 @@
+---
+- name: Ensure the logstash-forwarder directory exists
+  file:
+    path="{{ logstash_forwarder_directory }}/bin"
+    state=directory
+
+- name: Download logstash-forwarder release from GitHub
+  get_url:
+    url="https://github.com/elasticsearch/logstash-forwarder/archive/v{{ logstash_forwarder_version }}.tar.gz"
+    dest="/tmp/logstash-forwarder-v{{ logstash_forwarder_version }}.tar.gz"
+
+- name: Unarchive the release
+  unarchive:
+    src="/tmp/logstash-forwarder-v{{ logstash_forwarder_version }}.tar.gz"
+    dest="/tmp/"
+    copy=no
+
+- name: Build the release
+  shell: go build
+  args:
+    chdir: "/tmp/logstash-forwarder-{{ logstash_forwarder_version }}"
+
+- name: Copy the built release to the install directory
+  shell: "cp /tmp/logstash-forwarder-{{ logstash_forwarder_version }}/logstash-forwarder-{{ logstash_forwarder_version }} {{ logstash_forwarder_directory }}/bin/logstash-forwarder"
+  args:
+    creates: "{{ logstash_forwarder_directory }}/bin/logstash-forwarder"

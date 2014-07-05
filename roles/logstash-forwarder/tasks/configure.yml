@@ -1,0 +1,47 @@
+- name: Ensure logstash-forwarder config directory exists
+  file:
+    path="{{ logstash_forwarder_config_dir }}"
+    state=directory
+
+- name: Ensure logstash-forwarder has its config file
+  template:
+    src=config.json.j2
+    dest="{{ logstash_forwarder_config_dir }}/{{ logstash_forwarder_config_file }}"
+    owner=root
+    group=root
+    mode=0755
+  notify:
+    - Restart logstash-forwarder
+
+- name: Ensure logstash-forwarder has its SSL certificate
+  copy:
+    src="{{ logstash_forwarder_cert }}"
+    dest="{{ logstash_forwarder_cert_file }}"
+    owner=root
+    group=root
+    mode=0755
+
+- name: Ensure logstash-forwarder has its private key
+  # we're templating this out here so that the private key can be encrypted by vault
+  template:
+    src="{{ logstash_forwarder_key | mandatory }}"
+    dest="{{ logstash_forwarder_key_file }}"
+    owner=root
+    group=root
+    mode=0755
+
+- name: Create logstash-forwarder init file
+  template:
+    src=logstash-forwarder.init.j2
+    dest=/etc/init.d/logstash-forwarder
+    owner=root
+    group=root
+    mode=0645
+
+- name: Enable logstash-forwarder init file
+  service:
+    name=logstash-forwarder
+    enabled=yes
+    state=started
+  notify:
+    - Restart logstash-forwarder

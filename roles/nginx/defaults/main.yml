@@ -1,0 +1,15 @@
+nginx_version: "latest"
+
+nginx_conf_directory: "/etc/nginx"
+nginx_log_directory: "/var/log/nginx"
+
+nginx_user: "www-data"
+nginx_group: "www-data"
+
+nginx_concurrency: 4
+nginx_max_connections: 512
+nginx_keepalive: 60
+
+nginx_pid_file: "/var/run/nginx.pid"
+
+nginx_site_template: site.conf.j2

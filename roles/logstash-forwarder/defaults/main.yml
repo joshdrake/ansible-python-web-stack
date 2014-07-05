@@ -1,0 +1,22 @@
+logstash_forwarder_version: 0.3.1
+
+logstash_forwarder_directory: "/opt/logstash-forwarder"
+logstash_forwarder_key_file: "/etc/ssl/private/logstash-forwarder.key"
+logstash_forwarder_cert_file: "/etc/ssl/certs/logstash-forwarder.crt"
+logstash_forwarder_timeout: 15
+logstash_forwarder_config_dir: "/etc/logstash-forwarder"
+logstash_forwarder_config_file: "logstash-forwarder.json"
+
+logstash_forwarder_base_files:
+  - paths:
+      - /var/log/messages
+      - /var/log/auth.log
+    fields:
+      type: syslog
+  - paths:
+      - /var/log/faillog
+      - /var/log/fail2ban.log
+    fields:
+      type: fail2ban
+
+logstash_forwarder_extra_files: []

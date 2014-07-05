@@ -1,0 +1,17 @@
+{
+  "network": {
+    "servers": {{ logstash_servers|to_nice_json }},
+    "ssl key": "{{ logstash_forwarder_key_file }}",
+    "ssl ca": "{{ logstash_forwarder_cert_file }}",
+    "timeout": {{ logstash_forwarder_timeout }}
+  },
+
+  "files": [
+    {% for file in logstash_forwarder_base_files -%}
+      {{ file|to_nice_json }}{% if not loop.last or logstash_forwarder_extra_files|length > 0 %},{% endif %}
+    {%- endfor %}
+    {% for file in logstash_forwarder_extra_files -%}
+      {{ file|to_nice_json }}{% if not loop.last  %},{% endif %}
+    {%- endfor %}
+  ]
+}

@@ -1,0 +1,17 @@
+- name: Ensure main Nginx configuration file is up to date
+  template:
+    src=nginx.conf.j2
+    dest="{{ nginx_conf_directory }}/nginx.conf"
+    owner="{{ nginx_user }}"
+    group="{{ nginx_group }}"
+  tags:
+    - config
+  notify: reload nginx
+
+- name: Ensure Nginx does not have a default configuration
+  file:
+    path="{{ nginx_conf_directory }}/sites-enabled/default"
+    state=absent
+  tags:
+    - config
+  notify: reload nginx

@@ -1,0 +1,11 @@
+- name: Create supervisor configuration
+  template: src=supervisord.conf.j2
+            dest={{ supervisor_config }}
+  notify: Restart supervisor
+
+- name: Configure supervisor HTTP server when enabled
+  template: src=supervisor-http.ini.j2
+            dest={{ supervisor_config_dir }}/supervisor-http.ini
+            mode=754
+  when: supervisor_http
+  notify: Restart supervisor

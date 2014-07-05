@@ -1,0 +1,19 @@
+- name: Download Kibana tarball
+  get_url:
+    url="{{ kibana_download_url }}/kibana-{{ kibana_version }}.tar.gz"
+    dest="/tmp/kibana-{{ kibana_version }}.tar.gz"
+    mode=0440
+
+- name: Create Kibana home directory
+  file:
+    path="{{ kibana_home_dir }}"
+    state=directory
+    owner=www-data
+    group=www-data
+
+- name: Unarchive Kibana to home directory
+  unarchive:
+    src="/tmp/kibana-{{ kibana_version }}.tar.gz"
+    dest="{{ kibana_home_dir }}"
+    copy=no
+    creates="{{ kibana_home_dir }}/kibana-{{ kibana_version }}"

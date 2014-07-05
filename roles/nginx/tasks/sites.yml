@@ -1,0 +1,26 @@
+- name: Create configuration files for all sites
+  template:
+    src="{{ item.site_template|default(nginx_site_template) }}"
+    dest="{{ nginx_conf_directory }}/sites-available/{{ item.name }}.conf"
+    owner="{{ nginx_user }}"
+    group="{{ nginx_group }}"
+  with_items: nginx_sites
+  when: nginx_sites|length > 0
+  tags:
+    - config
+    - config:site
+
+- name: Link all site configuration files for items that are enabled
+  file:
+    src="{{ nginx_conf_directory }}/sites-available/{{ item.name }}.conf"
+    dest="{{ nginx_conf_directory }}/sites-enabled/{{ item.name }}.conf"
+    owner="{{ nginx_user }}"
+    group="{{ nginx_group }}"
+    state="{% if item.enabled|default('yes') %}link{% else %}absent{% endif %}"
+  with_items: nginx_sites
+  when: nginx_sites|length > 0
+  notify:
+    - reload nginx
+  tags:
+    - config
+    - config:site

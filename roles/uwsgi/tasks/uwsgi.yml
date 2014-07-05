@@ -1,0 +1,14 @@
+- name: Ensure uWSGI is at the latest version
+  apt: pkg=uwsgi state=latest
+
+- name: Ensure uWSGI emperor is at the latest version
+  apt: pkg=uwsgi-emperor state=latest
+
+- name: Ensure Python uWSGI plugin is installed
+  apt: pkg=uwsgi-plugin-python
+
+- name: Template out the uWSGI emperor config file
+  template: src=emperor.ini dest=/etc/uwsgi-emperor/emperor.ini owner=root group=www-data
+
+- name: Create the log directory
+  file: path=/var/log/uwsgi state=directory owner=www-data group=www-data
