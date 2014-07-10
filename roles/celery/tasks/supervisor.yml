@@ -1,0 +1,31 @@
+- name: Remove configuration scripts for disabled apps
+  file:
+    path: "{{ celery_supervisor_conf_dir }}/{{ item.name }}.ini"
+    state: absent
+  with_items: celery_apps
+  when: not item.enabled
+  notify: Restart supervisor
+
+- name: Install configuration scripts for supervisor
+  template:
+    src: supervisor.ini.j2
+    dest: "{{ celery_supervisor_conf_dir }}/{{ item.name }}.ini"
+  with_items: celery_apps
+  when: item.enabled
+  notify: Restart supervisor
+
+- name: Create stdout log files
+  file:
+    dest="{{ item.stdout_log|default(celery_supervisor_default_stdout_log) | dirname }}"
+    state=directory
+    owner=nobody
+    group=nogroup
+  with_items: celery_apps
+
+- name: Create stderr log files
+  file:
+    dest="{{ item.stderr_log|default(celery_supervisor_default_stderr_log) | dirname }}"
+    state=directory
+    owner=nobody
+    group=nogroup
+  with_items: celery_apps

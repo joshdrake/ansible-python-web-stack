@@ -1,0 +1,14 @@
+celery_apps: []
+celery_log_level: INFO
+celery_daemonize_with: supervisor
+
+celery_supervisor_conf_dir: /etc/supervisor/conf.d/
+celery_supervisor_user: nobody
+celery_supervisor_num_procs: 1
+celery_supervisor_default_stdout_log: /var/log/celery/worker.log
+celery_supervisor_default_stderr_log: /var/log/celery/worker.log
+celery_supervisor_stop_wait: 600
+celery_supervisor_priority: 500
+celery_supervisor_priority: 500
+celery_supervisor_autostart: !!str "true"
+celery_supervisor_autorestart: !!str "true"

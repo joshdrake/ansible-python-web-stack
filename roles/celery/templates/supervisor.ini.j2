@@ -1,0 +1,21 @@
+[program:celery-{{ item.name }}]
+command={{ item.virtualenv }}/bin/celery worker -A {{ item.project }} --loglevel={{ celery_log_level }} -n "{{ item.name }}@%%h"
+
+directory={{ item.chdir }}
+user={{ celery_supervisor_user }}
+numprocs={{ celery_supervisor_num_procs }}
+stdout_logfile={{ item.stdout_log|default(celery_supervisor_default_stdout_log) }}
+stderr_logfile={{ item.stderr_log|default(celery_supervisor_default_stderr_log) }}
+autostart={{ celery_supervisor_autostart }}
+autorestart={{ celery_supervisor_autorestart }}
+startsecs=10
+
+stopwaitsecs={{ celery_supervisor_stop_wait }}
+killasgroup=true
+priority={{ celery_supervisor_priority }}
+
+environment =
+  {% for key, value in item.get('env', {}).items() -%}
+    {{ key }}="{{ value.replace('%', '%%') }}"{% if not loop.last %},{% endif%}
+
+  {% endfor -%}

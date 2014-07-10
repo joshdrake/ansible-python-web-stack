@@ -1,0 +1,2 @@
+- include: supervisor.yml
+  when: celery_daemonize_with == "supervisor"
