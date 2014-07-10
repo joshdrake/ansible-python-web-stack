@@ -19,16 +19,6 @@
     - datastore
     - datastore:site
 
-- name: PostgreSQL | Change owner of database objects
-  sudo: yes
-  sudo_user: "{{ postgresql_admin_user }}"
-  shell: "psql {{ item.name }} -c 'REASSIGN OWNED BY {{ postgresql_admin_user }} TO {{ item.owner }}'"
-  with_items: postgresql_databases
-  when: postgresql_databases|length > 0
-  tags:
-    - datastore
-    - datastore:site
-
 - name: PostgreSQL | Make sure the PostgreSQL database schemas are present
   sudo: yes
   sudo_user: "{{ postgresql_admin_user }}"
