@@ -9,6 +9,16 @@
     - files
     - files:site
 
+- name: Remove site-configuration files for inactive clients
+  file:
+    path={{ uwsgi_chdir }}/{{ item.slug }}/uwsgi.ini
+    state=absent
+  with_items: uwsgi_sites
+  when: not item.active
+  tags:
+    - config
+    - config:site
+
 - name: Ensure site-configuration files are available for all clients
   template:
     src={{ uwsgi_site_template }}
@@ -16,6 +26,7 @@
     owner=www-data
     group=www-data
   with_items: uwsgi_sites
+  when: item.active
   tags:
     - config
     - config:site
