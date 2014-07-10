@@ -1,5 +1,3 @@
-supervisor_version: "latest"
-
 supervisor_home: '/etc/supervisor'
 supervisor_config: '{{ supervisor_home }}/supervisord.conf'
 supervisor_config_dir: '{{ supervisor_home }}/conf.d'

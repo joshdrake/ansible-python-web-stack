@@ -1,4 +1,4 @@
 - name: Install supervisor
   apt:
-    name="supervisor{% if version is defined %}={{ version }}{% endif %}"
-    state="{% if version is defined %}present{% else %}latest{% endif %}"
+    name="supervisor{% if supervisor_version is defined %}={{ supervisor_version }}{% endif %}"
+    state="{% if supervisor_version is defined %}present{% else %}latest{% endif %}"
