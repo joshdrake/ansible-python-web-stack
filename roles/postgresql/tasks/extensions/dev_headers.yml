@@ -3,4 +3,4 @@
     name: libpq-dev
     state: present
   notify:
-    - restart postgresql
+    - Restart PostgreSQL

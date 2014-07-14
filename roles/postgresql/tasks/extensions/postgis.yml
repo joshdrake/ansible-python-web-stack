@@ -8,4 +8,4 @@
     - libgeos-c1
     - "postgresql-{{postgresql_version}}-postgis-{{postgresql_ext_postgis_version}}"
   notify:
-    - restart postgresql
+    - Restart PostgreSQL

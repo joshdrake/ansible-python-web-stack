@@ -3,4 +3,4 @@
     name: "postgresql-contrib-{{ postgresql_version }}"
     state: present
   notify:
-    - restart postgresql
+    - Restart PostgreSQL
