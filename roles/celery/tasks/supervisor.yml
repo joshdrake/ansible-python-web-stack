@@ -4,15 +4,14 @@
     state: absent
   with_items: celery_apps
   when: not item.enabled
-  notify: Restart supervisor
+  register: celery_removed_apps
 
-- name: Install configuration scripts for supervisor
-  template:
-    src: supervisor.ini.j2
-    dest: "{{ celery_supervisor_conf_dir }}/{{ item.name }}.ini"
-  with_items: celery_apps
-  when: item.enabled
-  notify: Restart supervisor
+- name: Remove supervisor programs for uninstalled apps
+  supervisorctl:
+    state=stopped
+    name="celery-{{ item.item.name }}"
+  with_items: celery_removed_apps.results
+  when: item.changed
 
 - name: Create stdout log files
   file:
@@ -29,3 +28,18 @@
     owner=nobody
     group=nogroup
   with_items: celery_apps
+
+- name: Install configuration scripts for supervisor
+  template:
+    src: supervisor.ini.j2
+    dest: "{{ celery_supervisor_conf_dir }}/{{ item.name }}.ini"
+  with_items: celery_apps
+  when: item.enabled
+  register: celery_installed_apps
+
+- name: Add supervisor programs for installed apps
+  supervisorctl:
+    state=present
+    name="celery-{{ item.item.name }}"
+  with_items: celery_installed_apps.results
+  when: item.changed
